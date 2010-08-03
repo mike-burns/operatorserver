@@ -1,8 +1,7 @@
 Feature: Refreshing the contact list of potential operators
 
-  @wip
   Scenario: Phone sends all phone numbers in contact list
-    Given the following contacts exist:
+    Given the following users exist:
       | phone number |
       | 555 123 1212 |
       | 666 666 6666 |

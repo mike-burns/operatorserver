@@ -1,12 +1,12 @@
 POST /registrations                with: phone_number=string, registration_id=number
   -- Register your phone number
-PUT  /contact_list                 with: contacts=XML_for_contacts
+PUT  /contact_list                 with: contacts[0]=string, contacts[1]=string, contacts[2]=string, ..., contacts[n]=string
   -- send your contacts, get whether they are operators
-GET  /contact_list/:phone_number  with: my_phone_number=string
+GET  /contact_lists/:phone_number  with: my_phone_number=string
   -- request the contacts for an operator
-PUT  /contact_list/                with: contacts=XML_for_contacts
+PUT  /contact_lists                with: contacts=XML_for_contacts
   -- send your contacts
-GET  /contact_list/:phone_number   with: my_phone_number=string
+GET  /contact_lists/:phone_number   with: my_phone_number=string
   -- demand the contacts for an operator
 GET  /contacts/:id                 with: my_phone_number=string
   -- request the contact info for a given id
