@@ -4,12 +4,6 @@ module NavigationHelpers
 
     when /the home\s?page/
       '/'
-    when /the sign up page/i
-      sign_up_path
-    when /the sign in page/i
-      sign_in_path
-    when /the password reset request page/i
-      new_password_path
 
     # Add more page name => path mappings here
 

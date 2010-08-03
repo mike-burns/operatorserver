@@ -18,16 +18,6 @@ Rails::Initializer.run do |config|
   # config.frameworks -= [ :active_record, :active_resource, :action_mailer ]
 
   # Specify gems that this application depends on.
-  config.gem 'RedCloth',
-             :lib => 'redcloth',
-             :version => '>= 4.2.2'
-  config.gem 'will_paginate',
-             :version => '~> 2.3.14'
-  config.gem 'clearance',
-             :version => '>= 0.8.8'
-  config.gem 'formtastic',
-             :version => '>= 0.9.10'
-  config.gem 'paperclip'
   config.gem 'rack',
              :version => '>= 1.0.1'
   config.gem 'validation_reflection',
