@@ -1,5 +1,6 @@
 Feature: Refreshing the contact list of potential operators
 
+  @wip
   Scenario: Phone sends all phone numbers in contact list
     Given the following contacts exist:
       | phone number |
