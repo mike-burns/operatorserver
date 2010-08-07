@@ -11,9 +11,9 @@ set :deploy_via, :remote_cache
 set :deploy_to, "/usr/home/mike/#{application}"
 set :user, "mike"
 
-role :app, "operator.mike-burns.com"
-role :web, "operator.mike-burns.com"
-role :db,  "operator.mike-burns.com", :primary => true
+role :app, "mike-burns.com"
+role :web, "mike-burns.com"
+role :db,  "mike-burns.com", :primary => true
 
 namespace :deploy do
   desc "Default deploy - updated to run migrations"
