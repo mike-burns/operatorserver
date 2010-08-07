@@ -21,7 +21,6 @@ namespace :deploy do
     set :migrate_target, :latest
     update_code
     symlink
-    symlink_db_config
     migrate
     restart
   end
@@ -36,10 +35,5 @@ namespace :deploy do
     task action.to_sym, :roles => :app do
       run "thin #{action} -c #{deploy_to}/current -C /usr/local/etc/thin/#{application}.conf"
     end
-  end
-
-  desc "Use the database.yml that knows the prod password"
-  task :symlink_db_config do
-    run "rm -f #{current_path}/config/database.yml && ln -s #{shared_path}/database.yml #{current_path}/config/database.yml"
   end
 end
