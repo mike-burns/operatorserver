@@ -1,5 +1,8 @@
 class ContactListsController < ApplicationController
   def update
-    render :nothing => true
+    @users = User.by_phone_numbers(params[:contacts])
+    respond_to do |response|
+      response.xml
+    end
   end
 end
