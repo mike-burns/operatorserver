@@ -1,53 +1,45 @@
-set :stages, %w(staging production)
-set :default_stage, 'staging'
-require 'capistrano/ext/multistage'
+default_run_options[:pty] = true
+ssh_options[:forward_agent] = true
 
-before "deploy:setup", "db:password"
+set :application, "operatorserver"
+
+set :repository,  "git@github.com:mike-burns/operatorserver.git"
+set :scm, :git
+set :branch, "master"
+set :deploy_via, :remote_cache
+
+set :deploy_to, "/usr/home/mike/#{application}"
+set :user, "mike"
+
+role :app, "operator.mike-burns.com"
+role :web, "operator.mike-burns.com"
+role :db,  "operator.mike-burns.com", :primary => true
 
 namespace :deploy do
   desc "Default deploy - updated to run migrations"
   task :default do
     set :migrate_target, :latest
     update_code
-    migrate
     symlink
+    symlink_db_config
+    migrate
     restart
   end
-  desc "Start the mongrels"
-  task :start do
-    send(run_method, "cd #{deploy_to}/#{current_dir} && #{mongrel_rails} cluster::start --config #{mongrel_cluster_config}")
-  end
-  desc "Stop the mongrels"
-  task :stop do
-    send(run_method, "cd #{deploy_to}/#{current_dir} && #{mongrel_rails} cluster::stop --config #{mongrel_cluster_config}")
-  end
-  desc "Restart the mongrels"
-  task :restart do
-    send(run_method, "cd #{deploy_to}/#{current_dir} && #{mongrel_rails} cluster::restart --config #{mongrel_cluster_config}")
+
+  desc "Run this after every successful deployment"
+  task :after_default do
+    cleanup
   end
 
-  # Clean up old releases after each deployment
-  after "deploy", "deploy:cleanup"
-
-  before :deploy do
-    if real_revision.empty?
-      raise "The tag, revision, or branch #{revision} does not exist."
+  %w(start stop restart).each do |action|
+    desc "#{action} the Thin server"
+    task action.to_sym, :roles => :app do
+      run "thin #{action} -c #{deploy_to}/current -C /usr/local/etc/thin/#{application}.conf"
     end
   end
-end
 
-namespace :db do
-  desc "Create database password in shared path" 
-  task :password do
-    set :db_password, Proc.new { Capistrano::CLI.password_prompt("Remote database password: ") }
-    run "mkdir -p #{shared_path}/config" 
-    put db_password, "#{shared_path}/config/dbpassword" 
+  desc "Use the database.yml that knows the prod password"
+  task :symlink_db_config do
+    run "rm -f #{current_path}/config/database.yml && ln -s #{shared_path}/database.yml #{current_path}/config/database.yml"
   end
 end
-
-
-Dir[File.join(File.dirname(__FILE__), '..', 'vendor', 'gems', 'hoptoad_notifier-*')].each do |vendored_notifier|
-  $: << File.join(vendored_notifier, 'lib')
-end
-
-require 'hoptoad_notifier/capistrano'
