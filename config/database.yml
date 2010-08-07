@@ -15,13 +15,13 @@ test: &TEST
 staging:
   adapter: postgresql
   database: operatorserver_staging
-  username: postgres
+  username: pgsql
   password: <%= File.read(PASSWORD_FILE).chomp if File.readable? PASSWORD_FILE %>
   
 production:
   adapter: postgresql
   database: operatorserver_production
-  username: postgres
+  username: pgsql
   password: <%= File.read(PASSWORD_FILE).chomp if File.readable? PASSWORD_FILE %>
 
 cucumber:
